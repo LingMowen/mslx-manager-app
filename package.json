@@ -1,0 +1,41 @@
+{
+  "name": "mslx-manager",
+  "private": true,
+  "version": "1.1.6.5",
+  "license": "AGPL-3.0",
+  "type": "module",
+  "author": {
+    "name": "LingMowen",
+    "url": "https://github.com/LingMowen",
+    "bilibili": "https://b23.tv/1yabrrp"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc -b && vite build",
+    "preview": "vite preview",
+    "android": "npx cap sync android && npx cap open android"
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.3.0",
+    "@capacitor/app": "^8.1.0",
+    "@capacitor/browser": "^8.0.3",
+    "@capacitor/cli": "^8.3.0",
+    "@capacitor/core": "^8.3.0",
+    "@capacitor/preferences": "^8.0.1",
+    "@ionic/vue": "^8.8.2",
+    "@ionic/vue-router": "^8.8.2",
+    "@microsoft/signalr": "^10.0.0",
+    "axios": "^1.13.6",
+    "pinia": "^3.0.4",
+    "vue": "^3.5.30",
+    "vue-router": "^4.6.4"
+  },
+  "devDependencies": {
+    "@types/node": "^24.12.0",
+    "@vitejs/plugin-vue": "^6.0.5",
+    "@vue/tsconfig": "^0.9.0",
+    "typescript": "~5.9.3",
+    "vite": "^8.0.1",
+    "vue-tsc": "^3.2.5"
+  }
+}

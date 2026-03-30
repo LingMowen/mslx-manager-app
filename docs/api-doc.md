@@ -1,0 +1,95 @@
+# MSLX 守护进程端 - API文档
+
+## API Docs
+- 基础信息 > 守护进程端更新 [查询守护进程端更新信息](https://apidoc-mslx.mslmc.cn/410142897e0.md):
+- 基础信息 > 守护进程端更新 [获取守护进程端更新地址](https://apidoc-mslx.mslmc.cn/410142917e0.md):
+- 基础信息 > 守护进程端更新 [发起守护进程端自动更新](https://apidoc-mslx.mslmc.cn/410143291e0.md): 发起更新后，需要监听实时信息：/api/hubs/daemonUpdate
+- 基础信息 > 守护进程端更新 [监听守护进程端更新日志](https://apidoc-mslx.mslmc.cn/410143334e0.md): 返回参数：double progress, object speed, string stage, string message
+- 基础信息 > 设置 [查询系统偏好设置](https://apidoc-mslx.mslmc.cn/383306042e0.md):
+- 基础信息 > 设置 [修改系统偏好设置](https://apidoc-mslx.mslmc.cn/383306077e0.md):
+- 基础信息 > 设置 [获取个人信息](https://apidoc-mslx.mslmc.cn/410143841e0.md):
+- 基础信息 > 设置 [更新个人信息](https://apidoc-mslx.mslmc.cn/410144691e0.md):
+- 基础信息 > 设置 [获取面板样式设置](https://apidoc-mslx.mslmc.cn/410144700e0.md):
+- 基础信息 > 设置 [更新面板样式设置](https://apidoc-mslx.mslmc.cn/410144828e0.md):
+- 基础信息 > MSL OAuth 登录到面板 [获取 MSL 登录地址（用于登录/绑定面板账号）](https://apidoc-mslx.mslmc.cn/410146030e0.md):
+- 基础信息 > MSL OAuth 登录到面板 [绑定 MSL 账号](https://apidoc-mslx.mslmc.cn/410146151e0.md): 从OAuth中回调得到code
+- 基础信息 > MSL OAuth 登录到面板 [通过 MSL 账号登录面板](https://apidoc-mslx.mslmc.cn/410146289e0.md): 从OAuth中回调得到code
+- 基础信息 > MSL OAuth 登录到面板 [解绑 MSL 账号登录](https://apidoc-mslx.mslmc.cn/410145834e0.md):
+- 基础信息 [查询守护进程端基础信息](https://apidoc-mslx.mslmc.cn/366474343e0.md): 查询守护进程端基础信息
+- 基础信息 [查询面板自定义样式配置](https://apidoc-mslx.mslmc.cn/393359586e0.md):
+- 基础信息 [更新面板自定义样式](https://apidoc-mslx.mslmc.cn/393360273e0.md):
+- 服务端实例 > 服务端创建与删除 [创建服务端实例](https://apidoc-mslx.mslmc.cn/367627831e0.md):
+- 服务端实例 > 服务端创建与删除 [获取创建服务端实例的进度](https://apidoc-mslx.mslmc.cn/368033014e0.md):
+- 服务端实例 > 服务端创建与删除 [删除服务端实例](https://apidoc-mslx.mslmc.cn/387526556e0.md):
+- 服务端实例 > 服务端实例控制 > 玩家管理 > 白名单管理 [获取白名单列表](https://apidoc-mslx.mslmc.cn/419646185e0.md):
+- 服务端实例 > 服务端实例控制 > 玩家管理 > 白名单管理 [新增白名单用户](https://apidoc-mslx.mslmc.cn/419646351e0.md):
+- 服务端实例 > 服务端实例控制 > 玩家管理 > 白名单管理 [移除白名单用户](https://apidoc-mslx.mslmc.cn/419646365e0.md):
+- 服务端实例 > 服务端实例控制 > 玩家管理 > 管理员管理 [获取管理员列表](https://apidoc-mslx.mslmc.cn/419646459e0.md):
+- 服务端实例 > 服务端实例控制 > 玩家管理 > 管理员管理 [添加管理员](https://apidoc-mslx.mslmc.cn/419646510e0.md):
+- 服务端实例 > 服务端实例控制 > 玩家管理 > 管理员管理 [移除管理员](https://apidoc-mslx.mslmc.cn/419646524e0.md):
+- 服务端实例 > 服务端实例控制 > 玩家管理 > 封禁玩家管理 [查询封禁玩家列表](https://apidoc-mslx.mslmc.cn/419646713e0.md):
+- 服务端实例 > 服务端实例控制 > 玩家管理 > 封禁玩家管理 [添加封禁玩家](https://apidoc-mslx.mslmc.cn/419646719e0.md):
+- 服务端实例 > 服务端实例控制 > 玩家管理 > 封禁玩家管理 [移除封禁玩家](https://apidoc-mslx.mslmc.cn/419646720e0.md):
+- 服务端实例 > 服务端实例控制 > 玩家管理 > 封禁IP管理 [封禁IP](https://apidoc-mslx.mslmc.cn/419646808e0.md):
+- 服务端实例 > 服务端实例控制 > 玩家管理 > 封禁IP管理 [查询封禁IP列表](https://apidoc-mslx.mslmc.cn/419646826e0.md):
+- 服务端实例 > 服务端实例控制 > 玩家管理 > 封禁IP管理 [解封IP](https://apidoc-mslx.mslmc.cn/419646848e0.md):
+- 服务端实例 > 服务端实例控制 > 玩家管理 [获取在线玩家](https://apidoc-mslx.mslmc.cn/419543999e0.md):
+- 服务端实例 > 服务端实例控制 > 玩家管理 [获取历史玩家缓存列表](https://apidoc-mslx.mslmc.cn/419646019e0.md):
+- 服务端实例 > 服务端实例控制 [启动/停止服务端实例 & 备份服务端实例存档](https://apidoc-mslx.mslmc.cn/380589133e0.md):
+- 服务端实例 > 服务端实例控制 [监听服务端实例日志 & 发送指令](https://apidoc-mslx.mslmc.cn/387401126e0.md): 首先调用`JoinGroup`方法，开始监听特定实例的日志，参数是实例ID（int）。
+- 服务端实例 > 查询服务器实例信息 [查询服务器实例列表](https://apidoc-mslx.mslmc.cn/387458602e0.md):
+- 服务端实例 > 查询服务器实例信息 [查询单个服务器实例信息](https://apidoc-mslx.mslmc.cn/387521963e0.md):
+- 服务端实例 > 查询服务器实例信息 [获取服务端实例ICON](https://apidoc-mslx.mslmc.cn/387842511e0.md):
+- 服务端实例 > 服务器实例设置 [获取服务端实例通用设置信息](https://apidoc-mslx.mslmc.cn/388647760e0.md):
+- 服务端实例 > 服务器实例设置 [更新服务端实例设置](https://apidoc-mslx.mslmc.cn/388812831e0.md):
+- 服务端实例 > 服务器实例设置 [监听更新服务端实例进度](https://apidoc-mslx.mslmc.cn/388813213e0.md): 执行 JoinGroup 方法，参数是实例ID，即可订阅创建进度。（同理，LeaveGroup 方法取消订阅）。
+- 服务端实例 > 定时任务管理 [创建定时任务](https://apidoc-mslx.mslmc.cn/390791264e0.md):
+- 服务端实例 > 定时任务管理 [更新定时任务](https://apidoc-mslx.mslmc.cn/390792203e0.md):
+- 服务端实例 > 定时任务管理 [获取全部定时任务](https://apidoc-mslx.mslmc.cn/390792435e0.md):
+- 服务端实例 > 定时任务管理 [获取特定实例的定时任务](https://apidoc-mslx.mslmc.cn/390792442e0.md):
+- 服务端实例 > 定时任务管理 [删除定时任务](https://apidoc-mslx.mslmc.cn/390792527e0.md):
+- 服务端实例 > 服务端备份管理 [获取指定实例的备份文件列表](https://apidoc-mslx.mslmc.cn/416043170e0.md):
+- 服务端实例 > 服务端备份管理 [删除指定实例的指定备份文件](https://apidoc-mslx.mslmc.cn/416044361e0.md):
+- 服务端实例 > 服务端备份管理 [下载指定备份文件](https://apidoc-mslx.mslmc.cn/416063035e0.md):
+- 服务端实例 > 服务端备份管理 [获取全部实例的备份文件列表](https://apidoc-mslx.mslmc.cn/416434744e0.md):
+- 服务端实例 > 世界地图渲染 [获取世界出生点坐标](https://apidoc-mslx.mslmc.cn/419752435e0.md):
+- 服务端实例 > 世界地图渲染 [获取瓦片渲染图](https://apidoc-mslx.mslmc.cn/419754183e0.md):
+- 服务端实例 [查询电脑上的Java列表](https://apidoc-mslx.mslmc.cn/384485188e0.md):
+- Frp隧道 [创建隧道实例](https://apidoc-mslx.mslmc.cn/380973223e0.md): 前端应当集成服务商的配置获取
+- Frp隧道 [获取Frp隧道列表](https://apidoc-mslx.mslmc.cn/382247181e0.md):
+- Frp隧道 [启动/结束Frp进程](https://apidoc-mslx.mslmc.cn/382284536e0.md):
+- Frp隧道 [获取单个隧道实例信息](https://apidoc-mslx.mslmc.cn/382471755e0.md):
+- Frp隧道 [删除隧道实例](https://apidoc-mslx.mslmc.cn/382877753e0.md):
+- Frp隧道 [监听Frp实例日志](https://apidoc-mslx.mslmc.cn/383264731e0.md): 首先调用 JoinGroup 方法 ，参数是Frpc实例id。
+- Frp隧道 [修改Frp自启动隧道列表](https://apidoc-mslx.mslmc.cn/408744155e0.md):
+- Frp隧道 [查询Frp自启动列表](https://apidoc-mslx.mslmc.cn/408744271e0.md):
+- 上传文件 [初始化文件上传](https://apidoc-mslx.mslmc.cn/384656820e0.md):
+- 上传文件 [上传分片文件](https://apidoc-mslx.mslmc.cn/384656878e0.md):
+- 上传文件 [完成文件上传](https://apidoc-mslx.mslmc.cn/384656916e0.md):
+- 上传文件 [删除上传的临时文件](https://apidoc-mslx.mslmc.cn/384657876e0.md):
+- 上传文件 [查询上传的压缩包包含的Jar包列表](https://apidoc-mslx.mslmc.cn/385030132e0.md):
+- 文件管理系统 > 压缩 & 解压 [创建压缩任务](https://apidoc-mslx.mslmc.cn/389247816e0.md):
+- 文件管理系统 > 压缩 & 解压 [获取压缩任务进度](https://apidoc-mslx.mslmc.cn/389248626e0.md):
+- 文件管理系统 > 压缩 & 解压 [创建解压任务](https://apidoc-mslx.mslmc.cn/389249790e0.md):
+- 文件管理系统 > 压缩 & 解压 [获取解压任务进度](https://apidoc-mslx.mslmc.cn/389250333e0.md):
+- 文件管理系统 > 模组/插件管理 [获取目标实例的模组/插件列表](https://apidoc-mslx.mslmc.cn/390642640e0.md):
+- 文件管理系统 > 模组/插件管理 [对 模组/插件 进行 启用/禁用](https://apidoc-mslx.mslmc.cn/390642838e0.md):
+- 文件管理系统 > 公共静态资源 [访问公共静态资源图片](https://apidoc-mslx.mslmc.cn/393337834e0.md):
+- 文件管理系统 > 公共静态资源 [上传静态图片资源到公共文件夹](https://apidoc-mslx.mslmc.cn/393338308e0.md):
+- 文件管理系统 > 离线下载 [新增离线下载任务](https://apidoc-mslx.mslmc.cn/431477112e0.md):
+- 文件管理系统 > 离线下载 [查询离线下载任务状态](https://apidoc-mslx.mslmc.cn/431477131e0.md):
+- 文件管理系统 [查询实例的文件列表](https://apidoc-mslx.mslmc.cn/388816041e0.md):
+- 文件管理系统 [获取文件内容](https://apidoc-mslx.mslmc.cn/388916926e0.md): 特别的，id=0时指向Frpc配置文件文件夹
+- 文件管理系统 [新建/编辑文件](https://apidoc-mslx.mslmc.cn/388965257e0.md): 特别的，id=0时指向Frpc配置文件文件夹
+- 文件管理系统 [重命名文件夹/文件](https://apidoc-mslx.mslmc.cn/389054890e0.md):
+- 文件管理系统 [删除文件/文件夹](https://apidoc-mslx.mslmc.cn/389054920e0.md):
+- 文件管理系统 [上传文件](https://apidoc-mslx.mslmc.cn/389073769e0.md): 上传接口调用分块上传的接口即可
+- 文件管理系统 [下载文件](https://apidoc-mslx.mslmc.cn/389078724e0.md):
+- 文件管理系统 [新建文件夹](https://apidoc-mslx.mslmc.cn/390668620e0.md):
+- 文件管理系统 [移动文件](https://apidoc-mslx.mslmc.cn/392789912e0.md):
+- 文件管理系统 [复制文件](https://apidoc-mslx.mslmc.cn/392786106e0.md):
+- 用户管理 > 管理用户列表 [获取用户列表](https://apidoc-mslx.mslmc.cn/410143414e0.md):
+- 用户管理 > 管理用户列表 [更新用户信息](https://apidoc-mslx.mslmc.cn/410143451e0.md):
+- 用户管理 > 管理用户列表 [创建新用户](https://apidoc-mslx.mslmc.cn/410143467e0.md):
+- 用户管理 > 管理用户列表 [删除用户](https://apidoc-mslx.mslmc.cn/410143508e0.md):
+- 用户管理 [登录](https://apidoc-mslx.mslmc.cn/390824874e0.md):

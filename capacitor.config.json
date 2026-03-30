@@ -1,0 +1,14 @@
+{
+  "appId": "com.mslx.manager",
+  "appName": "MSLX Manager",
+  "webDir": "dist",
+  "bundledWebRuntime": false,
+  "android": {
+    "allowMixedContent": true,
+    "cleartextTrafficPermitted": true
+  },
+  "server": {
+    "androidScheme": "http",
+    "allowNavigation": ["*"]
+  }
+}
