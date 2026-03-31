@@ -2,11 +2,11 @@ import { get, post, put, del } from '@/utils/request'
 import type { ScheduledTask, ApiResponse } from '@/types'
 
 export async function getTasks(): Promise<ApiResponse<ScheduledTask[]>> {
-  return get<ScheduledTask[]>('/api/instance/tasks')
+  return get<ScheduledTask[]>('/api/instance/tasks/list')
 }
 
 export async function getTasksByInstance(instanceId: number): Promise<ApiResponse<ScheduledTask[]>> {
-  return get<ScheduledTask[]>(`/api/instance/tasks/instance/${instanceId}`)
+  return get<ScheduledTask[]>(`/api/instance/tasks/list/${instanceId}`)
 }
 
 export async function createTask(data: {

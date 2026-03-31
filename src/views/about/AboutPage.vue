@@ -2,8 +2,9 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { IonPage, IonMenu, IonContent, IonList, IonItem, IonLabel, IonIcon, IonListHeader, IonMenuToggle, IonHeader, IonToolbar, IonTitle } from '@ionic/vue'
-import { serverOutline, cloudOutline, peopleOutline, settingsOutline, swapHorizontalOutline, informationCircleOutline, chevronForwardOutline, chevronBackOutline, logoGithub, shieldOutline, documentTextOutline } from 'ionicons/icons'
+import { serverOutline, cloudOutline, peopleOutline, settingsOutline, swapHorizontalOutline, informationCircleOutline, chevronForwardOutline, chevronBackOutline, logoGithub, shieldOutline, documentTextOutline, folderOutline, mapOutline, timeOutline, downloadOutline, terminalOutline, pulseOutline } from 'ionicons/icons'
 import { Browser } from '@capacitor/browser'
+import { menuController } from '@ionic/vue'
 import { useConnectionStore } from '@/stores/connection'
 import { storage } from '@/utils/storage'
 
@@ -12,14 +13,28 @@ const connectionStore = useConnectionStore()
 
 const appInfo = ref({
   name: 'MSLX Manager',
-  version: '1.1.6.5',
-  buildNumber: '2025033001',
+  version: '1.1.7',
+  buildNumber: '2025040101',
   developer: 'LingMowen',
   website: 'https://github.com/LingMowen',
   bilibili: 'https://b23.tv/1yabrrp'
 })
 
 const updateHistory = ref([
+  {
+    version: '1.1.7',
+    date: '2025-04-01',
+    changes: [
+      '优化 ion-select 弹出框样式，修复选项显示问题',
+      '修复实例设置保存 API 路径错误',
+      '优化控制台日志滚动逻辑，日志从下往上排列',
+      '完善实例设置页面，添加更多配置选项',
+      '优化地图瓦片加载，显示加载进度条',
+      '添加地图缩放控制功能',
+      '优化 ion-action-sheet 样式为 Android 14 风格',
+      '更新版本号至 1.1.7'
+    ]
+  },
   {
     version: '1.1.6.5',
     date: '2025-03-30',
@@ -98,14 +113,15 @@ const updateHistory = ref([
 ])
 
 const features = ref([
-  { title: '服务器管理', desc: '轻松管理多个 Minecraft 服务器实例，支持启动、停止、重启等操作' },
-  { title: 'Frp 隧道', desc: '一键配置内网穿透，让服务器可被外部访问，支持多种隧道类型' },
-  { title: '用户管理', desc: '多用户支持，权限分级管理，保障服务器安全' },
-  { title: '实时监控', desc: '查看服务器状态、在线玩家、资源占用情况，实时掌握服务器运行状况' },
-  { title: '文件管理', desc: '在线浏览、上传、下载、编辑服务器文件，支持压缩和解压' },
-  { title: '地图可视化', desc: '实时查看服务器地图和玩家位置，支持在线地图渲染' },
-  { title: '任务调度', desc: '定时备份、自动重启等自动化任务，支持 Cron 表达式' },
-  { title: '备份管理', desc: '快速创建和恢复服务器备份，支持自动备份策略' }
+  { title: '服务器管理', desc: '轻松管理多个 Minecraft 服务器实例，支持启动、停止、重启等操作', icon: 'server-outline' },
+  { title: 'Frp 隧道', desc: '一键配置内网穿透，让服务器可被外部访问，支持多种隧道类型', icon: 'cloud-outline' },
+  { title: '用户管理', desc: '多用户支持，权限分级管理，保障服务器安全', icon: 'people-outline' },
+  { title: '实时监控', desc: '查看服务器状态、在线玩家、资源占用情况', icon: 'pulse-outline' },
+  { title: '文件管理', desc: '在线浏览、上传、下载、编辑服务器文件，支持压缩和解压', icon: 'folder-outline' },
+  { title: '地图可视化', desc: '实时查看服务器地图和玩家位置，支持在线地图渲染', icon: 'map-outline' },
+  { title: '任务调度', desc: '定时备份、自动重启等自动化任务，支持 Cron 表达式', icon: 'time-outline' },
+  { title: '备份管理', desc: '快速创建和恢复服务器备份，支持自动备份策略', icon: 'download-outline' },
+  { title: '命令控制', desc: '发送控制台命令，实时查看服务器日志', icon: 'terminal-outline' }
 ])
 
 const currentServerName = ref('')
@@ -123,6 +139,10 @@ try {
 
 function goBack() {
   router.back()
+}
+
+async function openMenu() {
+  await menuController.open('about-menu')
 }
 
 function goToHome() {
@@ -223,7 +243,7 @@ async function openExternalLink(url: string) {
     </ion-menu>
 
     <div class="app-header">
-      <button class="app-header-icon-button" @click="() => { const menu = document.querySelector('ion-menu'); if (menu) menu.open() }">
+      <button class="app-header-icon-button" @click="openMenu">
         <ion-icon :icon="chevronBackOutline"></ion-icon>
       </button>
       <div class="app-header-center">
@@ -251,6 +271,7 @@ async function openExternalLink(url: string) {
           <h2 class="section-title">功能介绍</h2>
           <div class="features-grid">
             <div v-for="feature in features" :key="feature.title" class="feature-item">
+              <ion-icon :icon="feature.icon" class="feature-icon"></ion-icon>
               <span class="feature-title">{{ feature.title }}</span>
               <span class="feature-desc">{{ feature.desc }}</span>
             </div>
@@ -375,29 +396,37 @@ async function openExternalLink(url: string) {
 }
 
 .features-grid {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: 12px;
 }
 
 .feature-item {
   display: flex;
   flex-direction: column;
-  padding: 16px;
+  align-items: center;
+  padding: 16px 12px;
   background: var(--ion-color-surface-container);
   border-radius: 12px;
+  text-align: center;
+}
+
+.feature-icon {
+  font-size: 28px;
+  margin-bottom: 8px;
 }
 
 .feature-title {
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 500;
   color: var(--ion-text-color);
   margin-bottom: 4px;
 }
 
 .feature-desc {
-  font-size: 14px;
+  font-size: 12px;
   color: var(--ion-text-color-secondary);
+  line-height: 1.4;
 }
 
 .update-list {

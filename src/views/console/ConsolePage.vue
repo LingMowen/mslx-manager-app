@@ -14,6 +14,7 @@ const instanceStore = useInstanceStore()
 
 const instanceId = computed(() => Number(route.params.id))
 const logs = ref<string[]>([])
+const MAX_LOGS = 2
 const command = ref('')
 const isLoading = ref(true)
 const isConnected = ref(false)
@@ -34,9 +35,12 @@ onMounted(async () => {
 
 async function loadHistoryLogs() {
   try {
-    const response = await getInstanceLogs(instanceId.value, 100)
+    const response = await getInstanceLogs(instanceId.value, MAX_LOGS)
     if (response.code === 200 && Array.isArray(response.data)) {
       logs.value = response.data
+      if (logs.value.length > MAX_LOGS) {
+        logs.value = logs.value.slice(-MAX_LOGS)
+      }
     }
   } catch (error) {
     console.error('Failed to load history logs:', error)
@@ -70,6 +74,9 @@ async function connectToHub() {
       
       instanceLogHub.onLog((log: string) => {
         logs.value.push(log)
+        if (logs.value.length > MAX_LOGS) {
+          logs.value = logs.value.slice(-MAX_LOGS)
+        }
         if (autoScroll.value) {
           nextTick(() => {
             scrollToBottom()
@@ -169,7 +176,9 @@ function onScroll(event: any) {
   const target = event.target
   if (target) {
     const { scrollTop, scrollHeight, clientHeight } = target
-    autoScroll.value = scrollTop + clientHeight >= scrollHeight - 50
+    const isAtBottom = scrollTop + clientHeight >= scrollHeight - 50
+    
+    autoScroll.value = isAtBottom
   }
 }
 </script>
@@ -194,50 +203,54 @@ function onScroll(event: any) {
       </div>
 
       <template v-else>
-        <div class="status-bar">
-          <div class="status-chip" :class="isConnected ? 'connected' : (connectionError ? 'error' : 'connecting')">
-            <span class="status-dot"></span>
-            <span>{{ isConnected ? '已连接' : (connectionError ? '连接失败' : '连接中...') }}</span>
-          </div>
-          <div class="status-chip instance-status" :class="instance?.status === 2 ? 'status-running' : 'status-stopped'">
-            {{ instance?.status === 2 ? '运行中' : '已停止' }}
-          </div>
-        </div>
-
-        <div v-if="connectionError && !isConnected" class="error-banner">
-          <ion-icon :icon="alertCircleOutline"></ion-icon>
-          <span>{{ connectionError }}</span>
-          <ion-button size="small" fill="outline" @click="reconnect">重连</ion-button>
-        </div>
-
-        <div class="log-container" ref="logContainer" @scroll="onScroll">
-          <div v-if="logs.length === 0" class="empty-logs">
-            <div class="empty-icon-wrapper">
-              <ion-icon :icon="terminalOutline" class="empty-icon"></ion-icon>
+        <div class="console-body">
+          <div class="status-bar">
+            <div class="status-chip" :class="isConnected ? 'connected' : (connectionError ? 'error' : 'connecting')">
+              <span class="status-dot"></span>
+              <span>{{ isConnected ? '已连接' : (connectionError ? '连接失败' : '连接中...') }}</span>
             </div>
-            <p class="empty-text">{{ isConnected ? '暂无日志，等待服务器输出...' : '正在连接实时日志...' }}</p>
-            <p class="empty-subtext" v-if="!isConnected && !connectionError">如果长时间无响应，请检查服务器状态</p>
-          </div>
-          <div v-else class="log-content">
-            <div v-for="(log, index) in logs" :key="index" class="log-line">
-              {{ log }}
+            <div class="status-chip instance-status" :class="instance?.status === 2 ? 'status-running' : 'status-stopped'">
+              {{ instance?.status === 2 ? '运行中' : '已停止' }}
             </div>
           </div>
-        </div>
 
-        <div class="command-bar">
-          <div class="command-input-wrapper">
-            <ion-input
-              v-model="command"
-              placeholder="输入命令..."
-              class="command-input"
-              :disabled="!isConnected"
-              @keydown="handleInputKeydown"
-            ></ion-input>
+          <div v-if="connectionError && !isConnected" class="error-banner">
+            <ion-icon :icon="alertCircleOutline"></ion-icon>
+            <span>{{ connectionError }}</span>
+            <ion-button size="small" fill="outline" @click="reconnect">重连</ion-button>
           </div>
-          <ion-button class="send-button" @click="sendCommand" :disabled="!command.trim() || !isConnected">
-            <ion-icon :icon="sendOutline"></ion-icon>
-          </ion-button>
+
+          <div class="log-wrapper">
+            <div class="log-container" ref="logContainer" @scroll="onScroll">
+              <div v-if="logs.length === 0" class="empty-logs">
+                <div class="empty-icon-wrapper">
+                  <ion-icon :icon="terminalOutline" class="empty-icon"></ion-icon>
+                </div>
+                <p class="empty-text">{{ isConnected ? '暂无日志，等待服务器输出...' : '正在连接实时日志...' }}</p>
+                <p class="empty-subtext" v-if="!isConnected && !connectionError">如果长时间无响应，请检查服务器状态</p>
+              </div>
+              <div v-else class="log-content">
+                <div v-for="(log, index) in logs" :key="index" class="log-line">
+                  {{ log }}
+                </div>
+              </div>
+            </div>
+
+            <div class="command-bar">
+              <div class="command-input-wrapper">
+                <ion-input
+                  v-model="command"
+                  placeholder="输入命令..."
+                  class="command-input"
+                  :disabled="!isConnected"
+                  @keydown="handleInputKeydown"
+                ></ion-input>
+              </div>
+              <ion-button class="send-button" @click="sendCommand" :disabled="!command.trim() || !isConnected">
+                <ion-icon :icon="sendOutline"></ion-icon>
+              </ion-button>
+            </div>
+          </div>
         </div>
       </template>
 
@@ -364,13 +377,69 @@ function onScroll(event: any) {
   font-weight: 500;
 }
 
+.console-body {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 0 16px;
+  box-sizing: border-box;
+}
+
+.log-wrapper {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  margin-top: 16px;
+}
+
 .log-container {
-  height: calc(100% - 180px);
+  flex: 1;
   overflow-y: auto;
   background: #1D1B20;
-  margin: 0 16px;
   border-radius: 16px;
   padding: 12px;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.log-content {
+  font-family: 'Consolas', 'Monaco', 'JetBrains Mono', monospace;
+  font-size: 12px;
+  line-height: 1.6;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-height: 100%;
+  flex-grow: 1;
+}
+
+.log-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.log-container::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 3px;
+}
+
+.log-container::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 3px;
+}
+
+.log-container::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.log-section {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  padding: 0 16px 16px;
+  gap: 0;
 }
 
 .empty-logs {
@@ -413,6 +482,11 @@ function onScroll(event: any) {
   font-family: 'Consolas', 'Monaco', 'JetBrains Mono', monospace;
   font-size: 12px;
   line-height: 1.6;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-height: 100%;
+  flex-grow: 1;
 }
 
 .log-line {
@@ -425,13 +499,8 @@ function onScroll(event: any) {
 .command-bar {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 12px 16px;
-  background: var(--ion-background-color);
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  gap: 12px;
+  padding: 0 16px 16px 16px;
 }
 
 .command-input-wrapper {

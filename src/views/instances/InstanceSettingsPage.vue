@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonBackButton, IonButtons, IonItem, IonLabel, IonInput, IonButton, IonIcon, IonSpinner, IonCard, IonCardContent, IonToggle, IonSelect, IonSelectOption, IonNote } from '@ionic/vue'
-import { saveOutline, refreshOutline, chevronBackOutline } from 'ionicons/icons'
+import { IonContent, IonPage, IonSpinner, IonIcon, IonButton, IonCard, IonCardContent, IonItem, IonLabel, IonInput, IonToggle, IonSelect, IonSelectOption, IonNote } from '@ionic/vue'
+import { saveOutline, chevronBackOutline } from 'ionicons/icons'
 import { useInstanceStore } from '@/stores/instance'
 import { getJavaList } from '@/api/instance'
 
@@ -22,6 +22,13 @@ const maxMemory = ref(4096)
 const args = ref('')
 const autoRestart = ref(false)
 const runOnStartup = ref(false)
+const core = ref('')
+const yggdrasilApiAddr = ref('')
+const backupMaxCount = ref(20)
+const backupDelay = ref(10)
+const backupPath = ref('')
+const inputEncoding = ref('utf-8')
+const outputEncoding = ref('utf-8')
 
 onMounted(async () => {
   isLoading.value = true
@@ -29,18 +36,25 @@ onMounted(async () => {
     await instanceStore.loadInstanceSettings(instanceId.value)
     const settings = instanceStore.currentSettings
     if (settings) {
-      name.value = settings.name
-      java.value = settings.java
-      minMemory.value = settings.minM
-      maxMemory.value = settings.maxM
-      args.value = settings.args
-      autoRestart.value = settings.autoRestart
-      runOnStartup.value = settings.runOnStartup
+      name.value = settings.name || ''
+      java.value = settings.java || ''
+      minMemory.value = settings.minM || 1024
+      maxMemory.value = settings.maxM || 4096
+      args.value = settings.args || ''
+      autoRestart.value = settings.autoRestart || false
+      runOnStartup.value = settings.runOnStartup || false
+      core.value = settings.core || ''
+      yggdrasilApiAddr.value = settings.yggdrasilApiAddr || ''
+      backupMaxCount.value = settings.backupMaxCount || 20
+      backupDelay.value = settings.backupDelay || 10
+      backupPath.value = settings.backupPath || ''
+      inputEncoding.value = settings.inputEncoding || 'utf-8'
+      outputEncoding.value = settings.outputEncoding || 'utf-8'
     }
 
     const response = await getJavaList()
     if (response.code === 200) {
-      javaList.value = response.data
+      javaList.value = response.data || []
     }
   } finally {
     isLoading.value = false
@@ -58,6 +72,13 @@ async function saveSettings() {
       args: args.value,
       autoRestart: autoRestart.value,
       runOnStartup: runOnStartup.value,
+      core: core.value,
+      yggdrasilApiAddr: yggdrasilApiAddr.value,
+      backupMaxCount: backupMaxCount.value,
+      backupDelay: backupDelay.value,
+      backupPath: backupPath.value,
+      inputEncoding: inputEncoding.value,
+      outputEncoding: outputEncoding.value,
     })
     if (result.success) {
       alert('保存成功')
@@ -92,9 +113,16 @@ async function saveSettings() {
       <template v-else>
         <ion-card>
           <ion-card-content>
+            <div class="card-title">基础设置</div>
+            
             <ion-item lines="full">
               <ion-label position="stacked">服务器名称</ion-label>
               <ion-input v-model="name" placeholder="服务器名称"></ion-input>
+            </ion-item>
+
+            <ion-item lines="full">
+              <ion-label position="stacked">核心文件</ion-label>
+              <ion-input v-model="core" placeholder="server.jar"></ion-input>
             </ion-item>
 
             <ion-item lines="full">
@@ -118,7 +146,7 @@ async function saveSettings() {
 
             <ion-item lines="full">
               <ion-label position="stacked">启动参数</ion-label>
-              <ion-input v-model="args" placeholder="额外启动参数"></ion-input>
+              <ion-input v-model="args" placeholder="额外 JVM 启动参数"></ion-input>
               <ion-note slot="helper">额外的 JVM 启动参数</ion-note>
             </ion-item>
           </ion-card-content>
@@ -126,6 +154,66 @@ async function saveSettings() {
 
         <ion-card>
           <ion-card-content>
+            <div class="card-title">认证服务</div>
+            
+            <ion-item lines="full">
+              <ion-label position="stacked">Yggdrasil API 地址</ion-label>
+              <ion-input v-model="yggdrasilApiAddr" placeholder="外置登录服务地址"></ion-input>
+              <ion-note slot="helper">外置登录服务（UUID Skin API）地址，留空使用默认验证</ion-note>
+            </ion-item>
+          </ion-card-content>
+        </ion-card>
+
+        <ion-card>
+          <ion-card-content>
+            <div class="card-title">编码设置</div>
+            
+            <ion-item lines="full">
+              <ion-label position="stacked">输入编码</ion-label>
+              <ion-select v-model="inputEncoding" interface="action-sheet">
+                <ion-select-option value="utf-8">UTF-8</ion-select-option>
+                <ion-select-option value="gbk">GBK</ion-select-option>
+                <ion-select-option value="gb2312">GB2312</ion-select-option>
+              </ion-select>
+            </ion-item>
+
+            <ion-item lines="full">
+              <ion-label position="stacked">输出编码</ion-label>
+              <ion-select v-model="outputEncoding" interface="action-sheet">
+                <ion-select-option value="utf-8">UTF-8</ion-select-option>
+                <ion-select-option value="gbk">GBK</ion-select-option>
+                <ion-select-option value="gb2312">GB2312</ion-select-option>
+              </ion-select>
+            </ion-item>
+          </ion-card-content>
+        </ion-card>
+
+        <ion-card>
+          <ion-card-content>
+            <div class="card-title">自动备份</div>
+            
+            <ion-item lines="full">
+              <ion-label position="stacked">最大备份数量</ion-label>
+              <ion-input v-model="backupMaxCount" type="number" placeholder="20"></ion-input>
+              <ion-note slot="helper">超过数量将自动删除最旧的备份</ion-note>
+            </ion-item>
+
+            <ion-item lines="full">
+              <ion-label position="stacked">备份间隔 (分钟)</ion-label>
+              <ion-input v-model="backupDelay" type="number" placeholder="10"></ion-input>
+            </ion-item>
+
+            <ion-item lines="full">
+              <ion-label position="stacked">备份保存路径</ion-label>
+              <ion-input v-model="backupPath" placeholder="MSLX://Backup/Instance"></ion-input>
+            </ion-item>
+          </ion-card-content>
+        </ion-card>
+
+        <ion-card>
+          <ion-card-content>
+            <div class="card-title">启动选项</div>
+            
             <ion-item lines="none">
               <ion-label>
                 <h3>自动重启</h3>
@@ -164,17 +252,37 @@ async function saveSettings() {
   height: 200px;
 }
 
+.card-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ion-color-primary);
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--ion-color-outline-variant);
+}
+
 ion-item {
   --padding-start: 0;
   --inner-padding-end: 0;
 }
 
-ion-label {
+ion-label h3 {
   font-weight: 500;
+  margin: 0;
+}
+
+ion-label p {
+  font-size: 12px;
+  color: var(--ion-text-color-secondary);
+  margin: 4px 0 0 0;
+}
+
+ion-note {
+  font-size: 12px;
 }
 
 .save-button {
-  margin: 16px;
+  margin: 16px 0;
   --border-radius: 12px;
   height: 48px;
 }

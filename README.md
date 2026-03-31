@@ -1,7 +1,7 @@
 # 🎮 MSLX Manager
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Version-1.1.6.5-blue?style=flat-square" alt="Version">
+  <img src="https://img.shields.io/badge/Version-1.1.7-blue?style=flat-square" alt="Version">
   <img src="https://img.shields.io/badge/License-AGPL--3.0-green?style=flat-square" alt="License">
   <img src="https://img.shields.io/badge/Platform-Android-brightgreen?style=flat-square" alt="Platform">
   <img src="https://img.shields.io/badge/Vue-3.4+-42b883?style=flat-square" alt="Vue">
@@ -96,6 +96,35 @@
 |------|------|
 | 🗺️ **地图浏览** | 查看 Minecraft 世界地图 |
 | 📍 **位置导航** | 快速定位出生点坐标 |
+
+---
+
+## 📝 更新日志
+
+### v1.1.7 (2025-04-01)
+| 类型 | 更新内容 |
+|------|---------|
+| 🐛 修复 | 修复实例设置保存 API 路径错误 |
+| 🎨 UI | 优化 ion-select 弹出框样式，修复选项显示问题 |
+| 🎨 UI | 优化 ion-action-sheet 样式为 Android 14 风格 |
+| 🎨 UI | 控制台日志从下往上排列，优化滚动逻辑 |
+| ✨ 功能 | 完善实例设置页面，添加更多配置选项 |
+| ✨ 功能 | 地图瓦片加载显示进度条 |
+| ✨ 功能 | 添加地图缩放控制功能 |
+
+### v1.1.6.5 (2025-03-30)
+| 类型 | 更新内容 |
+|------|---------|
+| 🐛 修复 | 优化安卓返回键逻辑，与系统保持一致 |
+| 🐛 修复 | 修复 SignalR 实时日志连接问题 |
+| 🎨 UI | 优化命令输入框状态管理 |
+
+### v1.1.6 (2025-03-29)
+| 类型 | 更新内容 |
+|------|---------|
+| 🐛 修复 | 修复 SignalR 实时日志连接问题 |
+| 🎨 UI | 优化命令输入框状态管理 |
+| ✨ 功能 | 改进错误提示信息 |
 
 ---
 

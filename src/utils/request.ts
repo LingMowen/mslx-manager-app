@@ -29,12 +29,14 @@ request.interceptors.request.use(
   (config) => {
     const server = getServerConfig()
     if (server) {
-      config.baseURL = server.url
+      config.baseURL = server.url.replace(/\/+$/, '')
       config.headers['x-api-key'] = server.apiKey
     }
-    if (currentUserToken) {
-      config.headers['x-user-token'] = currentUserToken
+    const token = currentUserToken || storage.get<string>('token')
+    if (token) {
+      config.headers['x-user-token'] = token
     }
+    console.log('API Request:', config.method?.toUpperCase(), (config.baseURL || '') + (config.url || ''))
     return config
   },
   (error) => {

@@ -41,7 +41,7 @@ export async function getInstanceSettings(id: number): Promise<ApiResponse<Insta
 }
 
 export async function updateInstanceSettings(id: number, settings: Partial<InstanceSettings>): Promise<ApiResponse<any>> {
-  return put(`/api/instance/settings/${id}`, settings)
+  return post(`/api/instance/settings/general/${id}`, settings)
 }
 
 export async function getCreateProgress(): Promise<ApiResponse<any>> {
