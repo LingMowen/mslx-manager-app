@@ -22,8 +22,9 @@ export async function createUser(data: {
   password: string
   name?: string
   role?: string
+  resources?: string[]
 }): Promise<ApiResponse<any>> {
-  return post('/api/admin/user', data)
+  return post('/api/admin/user/create', data)
 }
 
 export async function updateUser(id: string, data: Partial<AdminUser>): Promise<ApiResponse<any>> {
