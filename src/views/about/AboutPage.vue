@@ -1,11 +1,14 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { IonContent, IonPage, IonIcon } from '@ionic/vue'
-import { chevronBackOutline, logoGithub, mailOutline, shieldOutline, documentTextOutline } from 'ionicons/icons'
+import { IonPage, IonMenu, IonContent, IonList, IonItem, IonLabel, IonIcon, IonListHeader, IonMenuToggle, IonHeader, IonToolbar, IonTitle } from '@ionic/vue'
+import { serverOutline, cloudOutline, peopleOutline, settingsOutline, swapHorizontalOutline, informationCircleOutline, chevronForwardOutline, chevronBackOutline, logoGithub, shieldOutline, documentTextOutline } from 'ionicons/icons'
 import { Browser } from '@capacitor/browser'
+import { useConnectionStore } from '@/stores/connection'
+import { storage } from '@/utils/storage'
 
 const router = useRouter()
+const connectionStore = useConnectionStore()
 
 const appInfo = ref({
   name: 'MSLX Manager',
@@ -58,24 +61,24 @@ const updateHistory = ref([
     version: '1.1.5',
     date: '2025-03-30',
     changes: [
-      '新增关于页面一级菜单入口',
-      '更新版本号至 1.1.5',
-      '更新许可证为 AGPL-3.0'
+      'UI 全面调整为纯白背景风格',
+      '优化新拟态设计效果',
+      '修复按钮文字显示问题',
+      '更新版本号至 1.1.5'
     ]
   },
   {
     version: '1.1.0',
     date: '2025-03-29',
     changes: [
-      '全新 Material You 设计风格',
-      '支持深色模式，自动跟随系统主题',
-      '优化圆角和阴影效果',
-      '修复服务器离线状态检测',
-      '改进服务器连接验证机制',
-      '优化侧边栏菜单样式',
-      '统一整体配色方案',
-      '修复部分按钮文字显示问题',
-      '改进图标显示效果'
+      '正式版发布',
+      '支持 Minecraft 服务器管理',
+      '支持 Frp 内网穿透管理',
+      '支持用户权限管理',
+      '支持实时控制台查看',
+      '支持文件管理',
+      '支持任务调度',
+      '支持地图可视化'
     ]
   },
   {
@@ -105,8 +108,47 @@ const features = ref([
   { title: '备份管理', desc: '快速创建和恢复服务器备份，支持自动备份策略' }
 ])
 
+const currentServerName = ref('')
+const currentServerUrl = ref('')
+
+try {
+  const server = storage.get<{ url: string; name?: string }>('currentServer')
+  if (server) {
+    currentServerName.value = server.name || '未命名服务器'
+    currentServerUrl.value = server.url.replace(/^https?:\/\//, '').split('/')[0]
+  }
+} catch (e) {
+  console.warn('Failed to get server info:', e)
+}
+
 function goBack() {
   router.back()
+}
+
+function goToHome() {
+  router.push('/home')
+}
+
+function goToFrp() {
+  router.push('/frp')
+}
+
+function goToUsers() {
+  router.push('/users')
+}
+
+function goToSettings() {
+  router.push('/settings')
+}
+
+function goToAbout() {
+  router.push('/about')
+}
+
+function switchServer() {
+  connectionStore.currentServer = null
+  storage.remove('currentServer')
+  router.push('/connection')
 }
 
 async function openExternalLink(url: string) {
@@ -116,8 +158,72 @@ async function openExternalLink(url: string) {
 
 <template>
   <ion-page>
+    <ion-menu menu-id="about-menu" content-id="about-content">
+      <ion-content>
+        <ion-list>
+          <ion-item lines="none" class="server-item">
+            <ion-avatar slot="start" class="server-avatar">
+              <ion-icon :icon="serverOutline" class="server-avatar-icon"></ion-icon>
+            </ion-avatar>
+            <ion-label>
+              <h3>{{ currentServerName }}</h3>
+              <p>{{ currentServerUrl }}</p>
+            </ion-label>
+          </ion-item>
+        </ion-list>
+
+        <ion-list>
+          <ion-list-header>导航</ion-list-header>
+          <ion-menu-toggle :auto-hide="false">
+            <ion-item button @click="goToHome">
+              <ion-icon :icon="serverOutline" slot="start"></ion-icon>
+              <ion-label>服务器实例</ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+          <ion-menu-toggle :auto-hide="false">
+            <ion-item button @click="goToFrp">
+              <ion-icon :icon="cloudOutline" slot="start"></ion-icon>
+              <ion-label>Frp 隧道</ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+          <ion-menu-toggle :auto-hide="false">
+            <ion-item button @click="goToUsers">
+              <ion-icon :icon="peopleOutline" slot="start"></ion-icon>
+              <ion-label>用户管理</ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+        </ion-list>
+
+        <ion-list>
+          <ion-list-header>设置</ion-list-header>
+          <ion-menu-toggle :auto-hide="false">
+            <ion-item button @click="goToSettings">
+              <ion-icon :icon="settingsOutline" slot="start"></ion-icon>
+              <ion-label>系统设置</ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+          <ion-menu-toggle :auto-hide="false">
+            <ion-item button @click="switchServer">
+              <ion-icon :icon="swapHorizontalOutline" slot="start" color="primary"></ion-icon>
+              <ion-label color="primary">切换服务器</ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+        </ion-list>
+
+        <ion-list>
+          <ion-list-header>关于</ion-list-header>
+          <ion-menu-toggle :auto-hide="false">
+            <ion-item button @click="goToAbout">
+              <ion-icon :icon="informationCircleOutline" slot="start"></ion-icon>
+              <ion-label>关于</ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+        </ion-list>
+      </ion-content>
+    </ion-menu>
+
     <div class="app-header">
-      <button class="app-header-back-button" @click="goBack">
+      <button class="app-header-icon-button" @click="() => { const menu = document.querySelector('ion-menu'); if (menu) menu.open() }">
         <ion-icon :icon="chevronBackOutline"></ion-icon>
       </button>
       <div class="app-header-center">
@@ -126,9 +232,8 @@ async function openExternalLink(url: string) {
       <div style="width: 48px;"></div>
     </div>
 
-    <ion-content>
+    <ion-content id="about-content">
       <div class="content-wrapper">
-        <!-- App Info Section -->
         <div class="app-info-section">
           <div class="app-logo">
             <svg viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -142,7 +247,6 @@ async function openExternalLink(url: string) {
           <p class="app-developer">开发者: {{ appInfo.developer }}</p>
         </div>
 
-        <!-- Features Section -->
         <div class="section">
           <h2 class="section-title">功能介绍</h2>
           <div class="features-grid">
@@ -153,7 +257,6 @@ async function openExternalLink(url: string) {
           </div>
         </div>
 
-        <!-- Update History Section -->
         <div class="section">
           <h2 class="section-title">更新历史</h2>
           <div class="update-list">
@@ -169,7 +272,6 @@ async function openExternalLink(url: string) {
           </div>
         </div>
 
-        <!-- Links Section -->
         <div class="section">
           <h2 class="section-title">关于作者</h2>
           <div class="links-list">
@@ -181,6 +283,7 @@ async function openExternalLink(url: string) {
                 <span class="link-title">GitHub</span>
                 <span class="link-desc">https://github.com/LingMowen</span>
               </div>
+              <ion-icon :icon="chevronForwardOutline" class="link-arrow"></ion-icon>
             </div>
             <div class="link-item" @click="openExternalLink(appInfo.bilibili)">
               <div class="link-icon-wrapper">
@@ -190,11 +293,11 @@ async function openExternalLink(url: string) {
                 <span class="link-title">哔哩哔哩</span>
                 <span class="link-desc">凌墨问的个人空间</span>
               </div>
+              <ion-icon :icon="chevronForwardOutline" class="link-arrow"></ion-icon>
             </div>
           </div>
         </div>
 
-        <!-- License Section -->
         <div class="section">
           <h2 class="section-title">开源许可</h2>
           <div class="license-card">
@@ -203,7 +306,6 @@ async function openExternalLink(url: string) {
           </div>
         </div>
 
-        <!-- Copyright -->
         <div class="copyright">
           <p>© 2025 LingMowen. All rights reserved.</p>
           <p>本软件仅供学习交流使用</p>
@@ -228,22 +330,19 @@ async function openExternalLink(url: string) {
 }
 
 .app-logo {
-  width: 100px;
-  height: 100px;
-  border-radius: 24px;
-  margin-bottom: 20px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  width: 80px;
+  height: 80px;
+  margin-bottom: 16px;
 }
 
 .app-logo svg {
   width: 100%;
   height: 100%;
-  border-radius: 24px;
 }
 
 .app-name {
   font-size: 24px;
-  font-weight: 600;
+  font-weight: 500;
   color: var(--ion-text-color);
   margin: 0 0 8px 0;
 }
@@ -252,51 +351,53 @@ async function openExternalLink(url: string) {
   font-size: 14px;
   color: var(--ion-text-color-secondary);
   margin: 0 0 4px 0;
+  background: var(--ion-color-surface-container);
+  padding: 4px 12px;
+  border-radius: 12px;
 }
 
 .app-developer {
-  font-size: 13px;
+  font-size: 14px;
   color: var(--ion-text-color-secondary);
   margin: 0;
 }
 
 .section {
-  margin-bottom: 24px;
+  margin-top: 24px;
 }
 
 .section-title {
   font-size: 14px;
   font-weight: 500;
   color: var(--ion-text-color-secondary);
-  margin-bottom: 12px;
   letter-spacing: 0.1px;
+  margin: 0 0 16px 0;
 }
 
 .features-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  display: flex;
+  flex-direction: column;
   gap: 12px;
 }
 
 .feature-item {
-  background: var(--ion-color-surface-container);
-  border-radius: 12px;
-  padding: 16px;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  padding: 16px;
+  background: var(--ion-color-surface-container);
+  border-radius: 12px;
 }
 
 .feature-title {
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 500;
   color: var(--ion-text-color);
+  margin-bottom: 4px;
 }
 
 .feature-desc {
-  font-size: 13px;
+  font-size: 14px;
   color: var(--ion-text-color-secondary);
-  line-height: 1.5;
 }
 
 .update-list {
@@ -306,39 +407,42 @@ async function openExternalLink(url: string) {
 }
 
 .update-card {
-  background: var(--ion-color-surface-container);
-  border-radius: 16px;
   padding: 16px;
+  background: var(--ion-color-surface-container);
+  border-radius: 12px;
 }
 
 .update-header {
   display: flex;
-  align-items: center;
   justify-content: space-between;
+  align-items: center;
   margin-bottom: 12px;
 }
 
 .update-version {
   font-size: 16px;
-  font-weight: 600;
+  font-weight: 500;
   color: var(--ion-color-primary);
 }
 
 .update-date {
-  font-size: 13px;
+  font-size: 12px;
   color: var(--ion-text-color-secondary);
 }
 
 .update-changes {
   margin: 0;
-  padding-left: 16px;
-  color: var(--ion-text-color);
-  font-size: 14px;
-  line-height: 1.6;
+  padding-left: 20px;
 }
 
 .update-changes li {
+  font-size: 14px;
+  color: var(--ion-text-color);
   margin-bottom: 4px;
+}
+
+.update-changes li:last-child {
+  margin-bottom: 0;
 }
 
 .links-list {
@@ -350,28 +454,21 @@ async function openExternalLink(url: string) {
 .link-item {
   display: flex;
   align-items: center;
-  gap: 16px;
-  padding: 12px 16px;
+  padding: 16px;
   background: var(--ion-color-surface-container);
-  border-radius: 16px;
+  border-radius: 12px;
   cursor: pointer;
-  transition: background 0.2s ease;
-  text-decoration: none;
-}
-
-.link-item:active {
-  background: var(--ion-color-surface-container-high);
 }
 
 .link-icon-wrapper {
   width: 40px;
   height: 40px;
-  border-radius: 12px;
+  border-radius: 10px;
   background: var(--ion-color-primary-container);
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;
+  margin-right: 12px;
 }
 
 .link-icon-wrapper ion-icon {
@@ -383,49 +480,54 @@ async function openExternalLink(url: string) {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 2px;
 }
 
 .link-title {
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 500;
   color: var(--ion-text-color);
 }
 
 .link-desc {
-  font-size: 13px;
+  font-size: 12px;
   color: var(--ion-text-color-secondary);
 }
 
+.link-arrow {
+  font-size: 20px;
+  color: var(--ion-text-color-secondary);
+}
+
+.license-card {
+  padding: 16px;
+  background: var(--ion-color-surface-container);
+  border-radius: 12px;
+}
+
+.license-name {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--ion-text-color);
+  margin: 0 0 8px 0;
+}
+
+.license-desc {
+  font-size: 14px;
+  color: var(--ion-text-color-secondary);
+  margin: 0;
+  line-height: 1.5;
+}
+
 .copyright {
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid var(--ion-border-color);
   text-align: center;
-  padding: 24px 16px;
-  margin-top: 8px;
 }
 
 .copyright p {
   font-size: 12px;
   color: var(--ion-text-color-secondary);
   margin: 0 0 4px 0;
-}
-
-.license-card {
-  background: var(--ion-color-surface-container);
-  border-radius: 12px;
-  padding: 16px;
-}
-
-.license-name {
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--ion-text-color);
-  margin: 0 0 8px 0;
-}
-
-.license-desc {
-  font-size: 13px;
-  color: var(--ion-text-color-secondary);
-  line-height: 1.5;
-  margin: 0;
 }
 </style>

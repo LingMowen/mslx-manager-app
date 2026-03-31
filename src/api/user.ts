@@ -27,10 +27,15 @@ export async function createUser(data: {
   return post('/api/admin/user/create', data)
 }
 
-export async function updateUser(id: string, data: Partial<AdminUser>): Promise<ApiResponse<any>> {
-  return put(`/api/admin/user/${id}`, data)
+export async function updateUser(uuid: string, data: {
+  name?: string
+  role?: string
+  resetApiKey?: boolean
+  resources?: string[]
+}): Promise<ApiResponse<any>> {
+  return post(`/api/admin/user/update/${uuid}`, data)
 }
 
-export async function deleteUser(id: string): Promise<ApiResponse<any>> {
-  return del(`/api/admin/user/${id}`)
+export async function deleteUser(uuid: string): Promise<ApiResponse<any>> {
+  return post(`/api/admin/user/delete/${uuid}`, {})
 }

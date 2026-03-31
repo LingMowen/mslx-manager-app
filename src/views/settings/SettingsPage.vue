@@ -204,22 +204,6 @@ async function openMenu() {
             </div>
           </ion-card-content>
         </ion-card>
-
-        <div class="section-title">关于</div>
-        <ion-card class="about-card" @click="router.push('/about')">
-          <ion-card-content>
-            <div class="about-content">
-              <div class="app-icon-wrapper">
-                <ion-icon :icon="settingsOutline"></ion-icon>
-              </div>
-              <div class="app-info">
-                <span class="app-name">MSLX Manager</span>
-                <span class="app-version">版本 {{ getAppVersion() }}</span>
-              </div>
-              <ion-icon :icon="chevronForwardOutline" class="about-chevron"></ion-icon>
-            </div>
-          </ion-card-content>
-        </ion-card>
       </div>
     </ion-content>
   </ion-page>

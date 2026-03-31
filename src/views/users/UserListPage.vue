@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButtons, IonMenuButton, IonList, IonItem, IonLabel, IonIcon, IonButton, IonSpinner, IonRefresher, IonRefresherContent, IonFab, IonFabButton, IonActionSheet, IonAvatar, IonBadge, IonModal, IonInput, IonSelect, IonSelectOption, IonCard, IonCardContent, IonMenu, IonMenuToggle, IonListHeader, menuController } from '@ionic/vue'
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButtons, IonMenuButton, IonList, IonItem, IonLabel, IonIcon, IonButton, IonSpinner, IonRefresher, IonRefresherContent, IonFab, IonFabButton, IonActionSheet, IonAvatar, IonBadge, IonModal, IonInput, IonSelect, IonSelectOption, IonCard, IonCardContent, IonMenu, IonMenuToggle, IonListHeader, menuController, alertController } from '@ionic/vue'
 import { addOutline, personOutline, trashOutline, refreshOutline, createOutline, keyOutline, chevronForwardOutline, chevronBackOutline, serverOutline, cloudOutline, swapHorizontalOutline, settingsOutline, menuOutline, peopleOutline, informationCircleOutline, closeOutline } from 'ionicons/icons'
 import { getUserList, createUser, updateUser, deleteUser, type AdminUser } from '@/api/user'
 import { formatDate } from '@/utils/storage'
@@ -72,10 +72,30 @@ async function createNewUser() {
 }
 
 async function removeUser(user: AdminUser) {
-  if (confirm(`确定要删除用户 ${user.username} 吗？`)) {
-    await deleteUser(user.id)
-    await loadUsers()
-  }
+  const alert = await alertController.create({
+    header: '删除用户',
+    message: `确定要删除用户 ${user.username} 吗？此操作无法撤销。`,
+    cssClass: 'delete-alert',
+    buttons: [
+      {
+        text: '取消',
+        role: 'cancel',
+        handler: () => {
+          console.log('取消删除')
+        }
+      },
+      {
+        text: '删除',
+        role: 'destructive',
+        handler: async () => {
+          await deleteUser(user.id)
+          await loadUsers()
+        }
+      }
+    ]
+  })
+
+  await alert.present()
 }
 
 function getRoleText(role: string): string {
@@ -265,6 +285,7 @@ async function openMenu() {
           { text: '取消', role: 'cancel' }
         ]"
         @didDismiss="showActionSheet = false; selectedUser = null"
+        class="user-action-sheet"
       ></ion-action-sheet>
 
       <ion-modal :is-open="showCreateModal" @didDismiss="showCreateModal = false" class="custom-modal">
