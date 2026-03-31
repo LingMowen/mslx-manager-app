@@ -566,28 +566,25 @@ ion-spinner {
 
 ion-icon {
   --ionicon-stroke-width: 15px;
-  color: #000000;
-  font-weight: bold;
+  color: var(--ion-text-color);
 }
 
 ion-icon::part(icon) {
-  color: #000000;
-  font-weight: bold;
+  color: var(--ion-text-color);
 }
 
 ion-list ion-item ion-icon,
 ion-menu ion-item ion-icon {
-  color: #000000;
-  font-weight: bold;
+  color: var(--ion-text-color);
 }
 
-/* 深色模式下的图标颜色 */
-.dark ion-icon,
-.dark ion-icon::part(icon),
-.dark ion-list ion-item ion-icon,
-.dark ion-menu ion-item ion-icon {
-  color: #FFFFFF;
-  font-weight: bold;
+/* 确保 segment-button 内的图标和文字颜色正确 */
+ion-segment-button ion-icon {
+  color: var(--ion-text-color-secondary);
+}
+
+ion-segment-button.segment-button-checked ion-icon {
+  color: var(--ion-color-on-primary-container);
 }
 
 ion-label {
@@ -616,8 +613,8 @@ ion-segment-button {
   --border-radius: var(--md-sys-shape-corner-medium);
   --background: transparent;
   --background-checked: var(--ion-color-primary-container);
-  --color: #000000;
-  --color-checked: #000000;
+  --color: var(--ion-text-color-secondary);
+  --color-checked: var(--ion-color-on-primary-container);
   --indicator-box-shadow: none;
   --padding-top: 10px;
   --padding-bottom: 10px;
@@ -646,7 +643,7 @@ ion-segment-button::part(indicator) {
 }
 
 ion-segment-button ion-label {
-  color: #000000 !important;
+  color: var(--ion-text-color-secondary);
   font-size: 14px;
   font-weight: 600;
   display: block !important;
@@ -658,7 +655,7 @@ ion-segment-button ion-label {
 }
 
 ion-segment-button.segment-button-checked ion-label {
-  color: #000000 !important;
+  color: var(--ion-color-on-primary-container);
 }
 
 ion-toggle {
